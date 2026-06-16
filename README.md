@@ -1,6 +1,6 @@
 # LLM Evaluation & Observability Platform
 
-![CI](https://github.com/YOUR_GITHUB_USER/llm-evaluation-observability-platform/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/Daniel5569/llm-evaluation-observability-platform/actions/workflows/ci.yml/badge.svg)
 
 A production-shaped demo for tracking prompt quality, regression risk, traces, cost, latency, and human review across AI product workflows. Run locally in under two minutes — no API keys, no external services.
 
@@ -110,7 +110,7 @@ Scoring logic lives in `lib/evaluation-engine.ts` as pure, tested functions:
 ## Local Setup
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USER/llm-evaluation-observability-platform.git
+git clone https://github.com/Daniel5569/llm-evaluation-observability-platform.git
 cd llm-evaluation-observability-platform
 npm install
 npm run dev
@@ -128,7 +128,7 @@ npm test        # Vitest
 
 ## Deploy to Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_GITHUB_USER/llm-evaluation-observability-platform)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Daniel5569/llm-evaluation-observability-platform)
 
 No environment variables required.
 
