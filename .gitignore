@@ -30,8 +30,8 @@ Thumbs.db
 .idea/
 .npm-cache/
 
-# temporary screenshots or local QA artifacts
-screenshots/
+# temporary screenshots or local QA artifacts (docs/screenshots/ is intentionally tracked)
+/screenshots/
 tmp/
 playwright-report/
 test-results/

@@ -53,6 +53,17 @@ All data is synthetic and deterministic. No API keys required.
 6. Mark it **Needs fix** with a note.
 7. Confirm the audit log records the action with before/after status.
 
+## Screenshots
+
+![KPI dashboard](docs/screenshots/kpi-dashboard.png)
+*Release gate dashboard: pass rate, regressions, latency, cost, pending reviews at a glance*
+
+![Trace explorer](docs/screenshots/trace-explorer.png)
+*Trace explorer: per-request latency, cost, score, and failure category breakdown*
+
+![Audit log](docs/screenshots/audit-log.png)
+*Human review queue and audit log: reviewer actions with before/after status and notes*
+
 ## System Architecture
 
 This repo is the dashboard layer of a production eval system. The full data flow:
