@@ -79,12 +79,14 @@ export function EvalDashboard() {
   const kpis = useMemo(() => {
     const latestRun = [...evalRuns].sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))[0];
     const pendingReviews = testCases.filter((testCase) => testCase.status === "needs_review").length;
-    const avgLatency = Math.round(evalRuns.reduce((total, run) => total + run.avgLatencyMs, 0) / evalRuns.length);
+    const avgLatency = evalRuns.length > 0
+      ? Math.round(evalRuns.reduce((total, run) => total + run.avgLatencyMs, 0) / evalRuns.length)
+      : 0;
     const totalCost = evalRuns.reduce((total, run) => total + run.estimatedCostUsd, 0);
     const regressions = evalRuns.reduce((total, run) => total + run.regressionCount, 0);
 
     return [
-      { label: "Latest pass rate", value: formatPercent(latestRun.passRate), icon: CheckCircle2, tone: "text-emerald-600" },
+      { label: "Latest pass rate", value: latestRun ? formatPercent(latestRun.passRate) : "—", icon: CheckCircle2, tone: "text-emerald-600" },
       { label: "Regressions detected", value: String(regressions), icon: AlertTriangle, tone: "text-rose-600" },
       { label: "Avg latency", value: `${avgLatency} ms`, icon: Clock3, tone: "text-sky-600" },
       { label: "Estimated cost", value: formatCurrency(totalCost), icon: DollarSign, tone: "text-slate-700" },
@@ -93,18 +95,18 @@ export function EvalDashboard() {
   }, [testCases]);
 
   function selectProject(projectId: ProjectId) {
-    const nextRun = evalRuns.find((run) => run.projectId === projectId)!;
-    const nextCase = testCases.find((testCase) => testCase.runId === nextRun.id)!;
+    const nextRun = evalRuns.find((run) => run.projectId === projectId);
+    const nextCase = nextRun ? testCases.find((testCase) => testCase.runId === nextRun.id) : undefined;
     setSelectedProjectId(projectId);
-    setSelectedRunId(nextRun.id);
-    setSelectedCaseId(nextCase.id);
+    if (nextRun) setSelectedRunId(nextRun.id);
+    if (nextCase) setSelectedCaseId(nextCase.id);
   }
 
   function selectRun(run: EvalRun) {
-    const firstCase = testCases.find((testCase) => testCase.runId === run.id)!;
+    const firstCase = testCases.find((testCase) => testCase.runId === run.id);
     setSelectedProjectId(run.projectId);
     setSelectedRunId(run.id);
-    setSelectedCaseId(firstCase.id);
+    if (firstCase) setSelectedCaseId(firstCase.id);
   }
 
   function handleReviewerAction(action: "approve" | "needs_fix" | "ignore") {

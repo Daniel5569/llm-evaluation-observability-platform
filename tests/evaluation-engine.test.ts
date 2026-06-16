@@ -77,6 +77,34 @@ describe("evaluation engine", () => {
     ).toBe("hold");
   });
 
+  it("returns 0 for empty inputs", () => {
+    expect(calculateWeightedScore({})).toBe(0);
+    expect(calculatePassRate([])).toBe(0);
+    expect(detectRegressions([])).toHaveLength(0);
+  });
+
+  it("holds when severe regression exists regardless of high pass rate", () => {
+    expect(
+      getDeploymentRecommendation({
+        passRate: 98,
+        severeRegressionCount: 1,
+        mediumRegressionCount: 0,
+        pendingReviews: 0
+      })
+    ).toBe("hold");
+  });
+
+  it("ships when pass rate is high with no pending reviews", () => {
+    expect(
+      getDeploymentRecommendation({
+        passRate: 91,
+        severeRegressionCount: 0,
+        mediumRegressionCount: 0,
+        pendingReviews: 2
+      })
+    ).toBe("ship");
+  });
+
   it("updates reviewer status and produces an audit event", () => {
     const testCase: EvalTestCase = {
       id: "tc-1",
