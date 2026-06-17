@@ -1,6 +1,10 @@
 # LLM Evaluation & Observability Platform
 
-![CI](https://github.com/Daniel5569/llm-evaluation-observability-platform/actions/workflows/ci.yml/badge.svg)
+[![CI](https://github.com/Daniel5569/llm-evaluation-observability-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/Daniel5569/llm-evaluation-observability-platform/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+**[→ Live Demo](https://llm-evaluation-observability-platfo.vercel.app)** · **[→ GitHub](https://github.com/Daniel5569/llm-evaluation-observability-platform)**
+
 
 A production-shaped demo for tracking prompt quality, regression risk, traces, cost, latency, and human review across AI product workflows. Run locally in under two minutes — no API keys, no external services.
 
