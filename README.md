@@ -161,3 +161,28 @@ This repository uses synthetic projects, tickets, account signals, contract exce
 ## Why Not LangSmith or Weights & Biases?
 
 Off-the-shelf observability tools are great for individual developers experimenting with prompts. Internal tooling becomes valuable when the team needs custom release gates tied to product-specific metrics, a human review queue integrated with your existing workflow, and audit trails scoped to your deployment process — without routing production outputs through a third-party platform.
+## Architecture Decisions FAQ
+
+**Q: Why build a custom eval dashboard instead of using LangSmith, Arize, or Weights and Biases?**
+
+Third-party platforms work well when you are happy with their default metrics and do not mind routing production outputs off-premise. Teams that need custom release gates (e.g. block a deploy if retrieval recall drops below threshold on a domain-specific test set), proprietary cost attribution logic, or audit trails that stay inside their own infra reach the limits of hosted tools quickly. This codebase is a reference for what that internal platform looks like — it is not a claim that everyone should build their own.
+
+**Q: How are prompt regression tests structured — what exactly gets compared?**
+
+Each test fixture pairs an input (prompt template + variable set) with one or more expected output assertions — substring match, JSON schema validation, semantic similarity score, or a secondary LLM-as-judge call. Tests are versioned against prompt versions, so a graph of pass/fail rates over time shows exactly when a change to the prompt or the underlying model caused a regression. The same fixture set runs in CI on every push, making prompt changes as reviewable as code changes.
+
+**Q: Why store traces in PostgreSQL instead of a time-series DB like ClickHouse or TimescaleDB?**
+
+At the scale this demo targets (one team, hundreds of runs per day), PostgreSQL with appropriate indexes handles the query load without operational overhead. The schema is relational — a trace belongs to a prompt version, a version belongs to a prompt, a run has multiple spans — and those joins are cheap in PostgreSQL. ClickHouse becomes worth the operational cost when you are aggregating millions of rows per query in near real-time; at lower scale it is premature optimization.
+
+**Q: What is human review in this context — who reviews and at what point?**
+
+Human review is a queue that surfaces LLM outputs that scored below an automatic pass threshold on a configured metric — low confidence, flagged by the judge model, or sampled randomly for quality monitoring. The reviewer sees the input, the output, and the evaluation scores, and marks the result as acceptable or a regression. Accepted outputs can be promoted to golden examples in the test fixture set. The queue is the interface between automated evaluation and the subject-matter expert who defines what good looks like.
+
+**Q: Why Next.js for an observability dashboard instead of Grafana or Retool?**
+
+Grafana is excellent for infrastructure metrics from time-series sources (Prometheus, InfluxDB). LLM evaluation data is relational, not time-series — you want to pivot by prompt version, filter by model, and drill into individual traces with the full input/output. Retool would require a separate backend. Next.js gives a single deployment with API routes that query PostgreSQL directly, SSR for the initial page load, and full control over the UI without a no-code abstraction layer.
+
+**Q: How is cost tracked at the prompt-version level?**
+
+Each trace stores the token counts returned by the provider API (prompt tokens, completion tokens, model ID). Cost is computed at read time by joining against a model pricing table — so if provider pricing changes, historical cost estimates can be recalculated without re-running the traces. Aggregating by prompt version then shows which version is most efficient for a given quality level, making cost/quality tradeoff decisions explicit.
