@@ -12,6 +12,13 @@ A production-shaped demo for tracking prompt quality, regression risk, traces, c
 npm install && npm run dev   # open http://localhost:3000
 ```
 
+## Perfect for
+
+- **AI product teams** shipping prompt or model changes weekly who need a release gate that isn't just "does it feel better?"
+- **ML engineers** who want a structured regression testing loop with human sign-off before production
+- **CTOs and technical leads** evaluating what an internal LLM release process looks like before building one
+- **Founders** demoing AI quality controls to enterprise buyers who ask "how do you ensure outputs are safe?"
+
 ## Problem
 
 AI startups ship prompt and model changes without a repeatable release loop. The result: regressions reach production, bad outputs stay invisible, and human reviewers have no structured queue. Teams need fast answers to:
